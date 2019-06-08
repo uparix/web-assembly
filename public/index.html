@@ -11,8 +11,14 @@
       const readMemStr = ( offset, length ) => {
         const strBuffer = new Uint8Array(wasm.instance.exports.memory.buffer, offset, length)
         const str = new TextDecoder().decode(strBuffer)
-        console.log(str)
+        
+        // Notify and make use of new string
+        window.dispatchEvent(new CustomEvent('wasmValue', {detail: str}))
       }
+
+      window.addEventListener('wasmValue', str => {
+        console.log('Received a new string from C:', str.detail)
+      })
 
       const imports = {
         env: {
