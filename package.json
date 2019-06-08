@@ -1,9 +1,9 @@
 {
-  "name": "getting-started-with-webassembly",
+  "name": "web-assembly",
   "version": "1.0.0",
-  "description": "Getting Started with WebAssembly Course Code",
+  "description": "Getting Started with WebAssembly",
   "main": "server.js",
-  "author": "Ray Viljoen <ray@stackacademy.tv>",
+  "author": "Andreas Neuenschwander <andi@uparix.com>",
   "license": "MIT",
   "scripts": {
     "start": "node server.js"
