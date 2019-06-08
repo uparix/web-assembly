@@ -9,6 +9,9 @@ int main() {
     
     emscripten_async_run_script("alert('Hello from C - ASYNC!')", 2000);
 
+    int jsVal = emscripten_run_script_int("getNum()");
+    printf("Value from getNum(): %d\n", jsVal);
+
     return 1;
 }
 

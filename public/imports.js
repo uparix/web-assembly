@@ -1219,11 +1219,11 @@ function updateGlobalBufferViews() {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 4880,
+    STACK_BASE = 4912,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 5247760,
-    DYNAMIC_BASE = 5247760,
-    DYNAMICTOP_PTR = 4848;
+    STACK_MAX = 5247792,
+    DYNAMIC_BASE = 5247792,
+    DYNAMICTOP_PTR = 4880;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1715,7 +1715,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 3856;
+// STATICTOP = STATIC_BASE + 3888;
 /* global initializers */ /*__ATINIT__.push();*/
 
 
@@ -1726,7 +1726,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 4864
+var tempDoublePtr = 4896
 assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
@@ -2669,6 +2669,10 @@ function copyTempDouble(ptr) {
     }
 
 
+  function _emscripten_run_script_int(ptr) {
+      return eval(UTF8ToString(ptr))|0;
+    }
+
   
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.set(HEAPU8.subarray(src, src+num), dest);
@@ -2774,6 +2778,7 @@ var asmLibraryArg = {
   "_emscripten_memcpy_big": _emscripten_memcpy_big,
   "_emscripten_resize_heap": _emscripten_resize_heap,
   "_emscripten_run_script": _emscripten_run_script,
+  "_emscripten_run_script_int": _emscripten_run_script_int,
   "_emscripten_set_main_loop": _emscripten_set_main_loop,
   "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing,
   "abortOnCannotGrowMemory": abortOnCannotGrowMemory,
