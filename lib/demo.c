@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 int main() {
     printf("WASM Ready - Testing with Emscrypten HTML\n");
@@ -13,6 +14,8 @@ int getDoubleNum(int n) {
     return n*2;
 }
 
-char * greet() {
-    return "Hello";
+char * greet(char * name) {
+    char * greeting = "Hello ";
+    strcat(greeting, name);
+    return greeting;
 }
