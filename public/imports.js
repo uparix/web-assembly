@@ -1219,11 +1219,11 @@ function updateGlobalBufferViews() {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 4912,
+    STACK_BASE = 5008,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 5247792,
-    DYNAMIC_BASE = 5247792,
-    DYNAMICTOP_PTR = 4880;
+    STACK_MAX = 5247888,
+    DYNAMIC_BASE = 5247888,
+    DYNAMICTOP_PTR = 4976;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1711,11 +1711,11 @@ Module['asm'] = function(global, env, providedBuffer) {
 
 var ASM_CONSTS = [];
 
+function _jsFunction(n){ console.log("Call from EM_JS: " + n); }
 
 
 
-
-// STATICTOP = STATIC_BASE + 3888;
+// STATICTOP = STATIC_BASE + 3984;
 /* global initializers */ /*__ATINIT__.push();*/
 
 
@@ -1726,7 +1726,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 4896
+var tempDoublePtr = 4992
 assert(tempDoublePtr % 8 == 0);
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
@@ -2673,6 +2673,19 @@ function copyTempDouble(ptr) {
       return eval(UTF8ToString(ptr))|0;
     }
 
+  function _emscripten_run_script_string(ptr) {
+      var s = eval(UTF8ToString(ptr)) + '';
+      var me = _emscripten_run_script_string;
+      var len = lengthBytesUTF8(s);
+      if (!me.bufferSize || me.bufferSize < len+1) {
+        if (me.bufferSize) _free(me.buffer);
+        me.bufferSize = len+1;
+        me.buffer = _malloc(me.bufferSize);
+      }
+      stringToUTF8(s, me.buffer, me.bufferSize);
+      return me.buffer;
+    }
+
   
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.set(HEAPU8.subarray(src, src+num), dest);
@@ -2779,8 +2792,10 @@ var asmLibraryArg = {
   "_emscripten_resize_heap": _emscripten_resize_heap,
   "_emscripten_run_script": _emscripten_run_script,
   "_emscripten_run_script_int": _emscripten_run_script_int,
+  "_emscripten_run_script_string": _emscripten_run_script_string,
   "_emscripten_set_main_loop": _emscripten_set_main_loop,
   "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing,
+  "_jsFunction": _jsFunction,
   "abortOnCannotGrowMemory": abortOnCannotGrowMemory,
   "flush_NO_FILESYSTEM": flush_NO_FILESYSTEM,
   "tempDoublePtr": tempDoublePtr,
@@ -2789,6 +2804,12 @@ var asmLibraryArg = {
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (asmGlobalArg, asmLibraryArg, buffer);
+
+var real____em_js__jsFunction = asm["___em_js__jsFunction"]; asm["___em_js__jsFunction"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real____em_js__jsFunction.apply(null, arguments);
+};
 
 var real____errno_location = asm["___errno_location"]; asm["___errno_location"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
@@ -2850,6 +2871,10 @@ var real_stackSave = asm["stackSave"]; asm["stackSave"] = function() {
   return real_stackSave.apply(null, arguments);
 };
 Module["asm"] = asm;
+var ___em_js__jsFunction = Module["___em_js__jsFunction"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["___em_js__jsFunction"].apply(null, arguments) };
 var ___errno_location = Module["___errno_location"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
