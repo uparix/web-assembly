@@ -1,3 +1,8 @@
+## Commands
+
+```emcc lib/demo.c -s WASM=1 -o public/demo.js```
+
+
 ## Resources
 
 WASM Fiddle
