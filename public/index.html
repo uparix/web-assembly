@@ -8,10 +8,16 @@
     <h1>WebAssembly Demo</h1>
     <script>
 
+      const readMemStr = ( offset, length ) => {
+        const strBuffer = new Uint8Array(wasm.instance.exports.memory.buffer, offset, length)
+        const str = new TextDecoder().decode(strBuffer)
+        console.log(str)
+      }
+
       const imports = {
         env: {
           numLog: console.log,
-          strLog: console.log
+          strLog: readMemStr
         }
       }
       // Load WASM
