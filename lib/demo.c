@@ -4,3 +4,15 @@ int main() {
     printf("WASM Ready - Testing with Emscrypten HTML\n");
     return 1;
 }
+
+int getNum() {
+    return 22;
+}
+
+int getDoubleNum(int n) {
+    return n*2;
+}
+
+char * greet() {
+    return "Hello";
+}
