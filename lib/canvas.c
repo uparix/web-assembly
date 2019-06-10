@@ -5,7 +5,7 @@
 #include <emscripten.h>
 
 // Number of circles
-#define NUM_CIRCLES 50
+#define NUM_CIRCLES 500
 
 // Circle Struct
 struct Circle {

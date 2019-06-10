@@ -24,12 +24,9 @@
       // Render circles on canvas
       const render = ( dataLength, circleStructSize ) => {
 
-        console.log(Module)
-
         // Get circle data from C - Typed Array
-        let circles = new Int32Array( Module.buffer, _getCircles( canvas.width, canvas.height ), dataLength )
+        let circles = new Int32Array( Module.HEAP32.buffer, _getCircles( canvas.width, canvas.height ), dataLength )
 
-        console.log(circles)
 
         // Clear existing canvas to re-render
         context.clearRect( 0, 0, canvas.width, canvas.height )
@@ -40,8 +37,6 @@
           // Get circle data chunk
           let circle = circles.slice( i, i+circleStructSize )
 
-          console.log(circle[0])
-
           // Draw circle
           context.beginPath()
           context.arc(circle[0], circle[1], circle[2], 0, 2*Math.PI, false)
@@ -50,11 +45,10 @@
         }
 
         // Request next animation frame and re-render with updated circles
-        //window.requestAnimationFrame( () => {
-        //  render( dataLength, circleStructSize )
-        //})
+        window.requestAnimationFrame( () => {
+          render( dataLength, circleStructSize )
+        })
 
-        //window.requestAnimationFrame(render( dataLength, circleStructSize ))
       }
 
     </script>
